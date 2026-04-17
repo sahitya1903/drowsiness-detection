@@ -1,114 +1,128 @@
-# Driver Drowsiness Detection and Alert System
+# Driver Drowsiness Detection
 
-A deep learning–based system that detects driver drowsiness in real time and triggers an alert to help prevent fatigue-related accidents.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Model Architecture](#model-architecture)
-- [Dataset](#dataset)
-- [Model Performance](#model-performance)
-- [Sample Testing](#sample-testing)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Work in Progress](#work-in-progress)
-- [License](#license)
-
----
+Driver drowsiness detection project built with TensorFlow/Keras, OpenCV, and Haar Cascade classifiers. The repository contains the training workflow, a saved model, and a notebook for webcam-based eye-state monitoring.
 
 ## Overview
 
-Driver fatigue is one of the leading causes of road accidents worldwide. This project builds an intelligent drowsiness detection system that monitors a driver's eye state (open/closed) and raises an alert whenever signs of drowsiness are detected.
+This project classifies eye state as `Open_Eyes` or `Closed_Eyes` and uses that prediction as the basis for a drowsiness alert pipeline. The current repository is organized around notebooks:
 
-The system leverages **transfer learning** on the lightweight **MobileNet** architecture, making it efficient enough to run on resource-constrained hardware while still achieving high accuracy.
-
----
+- `Model_train.ipynb` for dataset preparation, model training, evaluation, and sample-image testing
+- `main.ipynb` for loading the trained model and running webcam inference with face and eye detection
 
 ## Features
 
-- **Transfer Learning** – Fine-tuned MobileNet pretrained on ImageNet for fast convergence and high accuracy.
-- **High Accuracy** – ~97% validation accuracy on a held-out test set.
-- **Large Training Dataset** – Trained on a curated dataset of 65,000+ images covering open/closed eye states under various lighting and head-pose conditions.
-- **Static Image Testing** – Supports inference on arbitrary (unknown) images to verify model generalisation.
-- **Alert System** – Triggers an audible/visual alert when drowsiness is detected.
-- **Real-Time Monitoring** *(work in progress)* – Integration with webcam feed for continuous driver monitoring.
+- MobileNet-based transfer learning model
+- Binary eye-state classification for drowsiness detection
+- Webcam inference workflow using OpenCV
+- Haar Cascade face and eye detection
+- Saved trained model included in the repository
+- Sample test images for quick validation
 
----
+## Project Directory
 
-## Model Architecture
-
-| Component | Details |
-|-----------|---------|
-| Base model | MobileNet (pretrained on ImageNet) |
-| Strategy | Transfer learning – base layers frozen, custom classification head added |
-| Input size | 224 × 224 × 3 |
-| Output classes | 2 (Drowsy / Alert) |
-| Optimizer | Adam |
-| Loss function | Categorical cross-entropy |
-
-The lightweight MobileNet backbone ensures low latency, which is critical for real-time inference.
-
----
-
-## Dataset
-
-- **Total images**: ~65,000
-- **Classes**: Drowsy (eyes closed / head drooping) and Alert (eyes open)
-- **Sources**: Publicly available eye-state and driver-monitoring datasets
-- **Preprocessing**: Resized to 224 × 224, normalised pixel values to [0, 1], data augmentation (horizontal flip, brightness adjustment, zoom)
-
----
-
-## Model Performance
-
-| Metric | Value |
-|--------|-------|
-| Training accuracy | ~96% |
-| Validation accuracy | ~97% |
-
-The model generalises well to unseen images, as confirmed by sample testing with independent images not present in the training or validation sets.
-
----
-
-## Installation
-
-### Prerequisites
-
-- Python 3.8+
-- pip
-
-### Steps
-
-```bash
-# Clone the repository
-git clone https://github.com/sahitya1903/drowsiness-detection.git
-cd drowsiness-detection
-
-# (Optional) Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+```text
+drowsiness-detection/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── Train_Dataset/
+│   ├── Closed_Eyes/
+│   └── Open_Eyes/
+├── Test_Dataset/
+│   ├── Closed_Eyes/
+│   └── Open_Eyes/
+├── Model_train.ipynb
+├── main.ipynb
+├── model.keras
+├── haarcascade_frontalface_default.xml
+├── haarcascade_eye.xml
+├── test1.png
+├── test2.png
+└── test_img.jpg/
 ```
 
-> **Note:** A `requirements.txt` will be added once the real-time integration module is finalised.
+## File Guide
+
+| Path | Purpose |
+| --- | --- |
+| `Model_train.ipynb` | Trains the eye-state classification model and saves it as `model.keras` |
+| `main.ipynb` | Loads the trained model and runs live webcam-based detection |
+| `model.keras` | Saved trained Keras model used during inference |
+| `haarcascade_frontalface_default.xml` | Face detection cascade used by OpenCV |
+| `haarcascade_eye.xml` | Eye detection cascade used by OpenCV |
+| `test1.png`, `test2.png`, `test_img.jpg` | Sample images for testing and demonstration |
+| `Train_Dataset/` | Training dataset directory with `Closed_Eyes` and `Open_Eyes` subfolders |
+| `Test_Dataset/` | Test dataset directory with `Closed_Eyes` and `Open_Eyes` subfolders |
+
+## Dataset Structure
+
+Both dataset folders are expected to follow this class-based layout:
+
+```text
+Train_Dataset/
+├── Closed_Eyes/
+└── Open_Eyes/
+
+Test_Dataset/
+├── Closed_Eyes/
+└── Open_Eyes/
+```
+
+Images are loaded directly from these folders in the training notebook.
+
+## Model Workflow
+
+1. Prepare training and test images inside the dataset folders.
+2. Open `Model_train.ipynb`.
+3. Train the MobileNet-based classifier.
+4. Save the trained model as `model.keras`.
+5. Open `main.ipynb` to run webcam inference using the saved model.
+
+## How To Run
+
+### 1. Create an environment
+
+```bash
+python -m venv .venv
+```
+
+Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+### 2. Install dependencies
+
+This repository does not currently include a `requirements.txt`, so install the core packages manually:
+
+```bash
+pip install tensorflow opencv-python numpy matplotlib jupyter
+```
+
+### 3. Train the model
+
+Run `Model_train.ipynb` from Jupyter Notebook or VS Code Notebook support.
+
+### 4. Run webcam detection
+
+Open `main.ipynb`, ensure `model.keras` is present, then run the notebook cells to start webcam-based monitoring.
 
 
-## Work in Progress
+## Future Improvements
 
-- [ ] Real-time webcam integration using OpenCV
-- [ ] Audible alert system (buzzer / audio notification)
-- [ ] Face and eye detection preprocessing pipeline (Haar Cascade / Dlib)
-- [ ] Deployment on edge devices (Raspberry Pi / Jetson Nano)
-- [ ] REST API for remote monitoring
-
----
+- Convert notebook workflows into Python scripts
+- Add an audible alert module
+- Add a `requirements.txt`
+- Add evaluation metrics and result snapshots
+- Package the webcam pipeline into a single runnable app
 
 ## License
 
-This project is licensed under the terms of the [LICENSE](LICENSE) file included in this repository.
+This project is licensed under the terms of the [LICENSE](LICENSE) file.
