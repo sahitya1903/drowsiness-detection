@@ -1,4 +1,4 @@
-# Driver Drowsiness Detection System
+# AlertDrive
 
 A real-time driver drowsiness detection system built with **TensorFlow/Keras (MobileNet Transfer Learning)**, **OpenCV**, and **Streamlit**. The project provides both a local Jupyter notebook development environment and a browser-based web application utilizing WebRTC for real-time video streaming and inference.
 
@@ -19,7 +19,7 @@ A real-time driver drowsiness detection system built with **TensorFlow/Keras (Mo
 ## 📂 Project Directory Structure
 
 ```text
-drowsiness-detection/
+alert-drive/
 ├── .devcontainer/                      # Dev container settings
 ├── .gitignore                          # Standard git exclusions
 ├── LICENSE                             # MIT License
